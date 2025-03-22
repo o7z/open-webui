@@ -42,8 +42,6 @@ services:
 
 volumes:
   ollama:
-    driver: local
     external: true
   open-webui:
-    driver: local
     external: true
