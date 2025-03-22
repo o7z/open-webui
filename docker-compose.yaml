@@ -1,12 +1,23 @@
+version: '3.8'
+
 services:
   ollama:
+    image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
+    container_name: ollama
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
     volumes:
       - ollama:/root/.ollama
-    container_name: ollama
     pull_policy: always
-    tty: true
-    restart: unless-stopped
-    image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
+    ports:
+      - 11434:11434
+    command: serve
 
   open-webui:
     build:
@@ -30,5 +41,9 @@ services:
     restart: unless-stopped
 
 volumes:
-  ollama: {}
-  open-webui: {}
+  ollama:
+    driver: local
+    external: true
+  open-webui:
+    driver: local
+    external: true
